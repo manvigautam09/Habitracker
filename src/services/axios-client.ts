@@ -1,6 +1,7 @@
 import Config from 'react-native-config';
 import axios, {AxiosInstance, AxiosResponse} from 'axios';
 
+console.log('### Config.BASE_URL', Config.BASE_URL);
 // Create an instance of Axios with custom configuration
 const axiosClient: AxiosInstance = axios.create({
   baseURL: Config.BASE_URL, // Replace with your API base URL

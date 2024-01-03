@@ -11,6 +11,7 @@ import {
   passwordValidationRules,
   usernameValidationRules,
 } from '../../utils/validation-rules';
+import {handleRegister} from '../../services/auth';
 import CustomTextInput from '../../components/CustomTextInput';
 import LoginRegisterContainer from '../../components/LoginRegisterContainer';
 
@@ -23,28 +24,19 @@ function SignUp(): React.JSX.Element {
     formState: {errors},
   } = useForm();
 
-  const registerUser = async (data: any) => {
-    // Perform your registration logic here
-    // For example, make an API call to register the user
-    const response = await fetch('/api/register', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+  const {mutate: register, isPending} = useMutation({
+    mutationFn: handleRegister,
+    onSuccess(data, variables) {
+      console.log('### data', data.data);
+      console.log('### variables', variables);
+      // navigation.navigate('Login');
+    },
+    onError(error) {
+      console.log('### error', error);
+    },
+  });
 
-    if (!response.ok) {
-      throw new Error('Registration failed');
-    }
-
-    // Return the registered user data
-    return response.json();
-  };
-
-  const {mutate: register, isLoading} = useMutation(registerUser);
   const onSubmit = (data: any) => {
-    console.log('### data', data);
     register(data);
   };
 
@@ -118,8 +110,10 @@ function SignUp(): React.JSX.Element {
       <Button
         mode="contained"
         style={styles.loginButtonStyle}
+        disabled={isPending}
+        loading={isPending}
         onPress={handleSubmit(onSubmit)}>
-        Register
+        {isPending ? 'Signing up...' : 'Register'}
       </Button>
       <Button
         style={styles.loginRegisterSection}
