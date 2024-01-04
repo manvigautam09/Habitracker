@@ -16,6 +16,7 @@ import Home from './screens/Home';
 import Login from './screens/Login';
 import SignUp from './screens/SignUp';
 import {fonts} from './utils/font-config';
+import {SCREEN_CONSTANTS} from './utils/constant';
 import {generatedDarkScheme} from './utils/color-scheme';
 
 const {DarkTheme} = adaptNavigationTheme({
@@ -43,11 +44,11 @@ function App(): React.JSX.Element {
       <PaperProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Login"
+            initialRouteName={SCREEN_CONSTANTS.LOGIN}
             screenOptions={{headerShown: false}}>
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="SignUp" component={SignUp} />
-            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name={SCREEN_CONSTANTS.LOGIN} component={Login} />
+            <Stack.Screen name={SCREEN_CONSTANTS.SIGN_UP} component={SignUp} />
+            <Stack.Screen name={SCREEN_CONSTANTS.HOME} component={Home} />
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>

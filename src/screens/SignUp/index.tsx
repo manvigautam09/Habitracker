@@ -12,12 +12,15 @@ import {
   usernameValidationRules,
 } from '../../utils/validation-rules';
 import {handleRegister} from '../../services/auth';
+import {SCREEN_CONSTANTS} from '../../utils/constant';
+import {useGetAccessToken} from '../../hooks/access-token';
 import CustomTextInput from '../../components/CustomTextInput';
+import {convertExpiresInToExpiresAt} from '../../utils/helpers';
 import LoginRegisterContainer from '../../components/LoginRegisterContainer';
 
 function SignUp(): React.JSX.Element {
   const navigation = useNavigation();
-
+  const {setAccessToken} = useGetAccessToken();
   const {
     control,
     handleSubmit,
@@ -26,13 +29,16 @@ function SignUp(): React.JSX.Element {
 
   const {mutate: register, isPending} = useMutation({
     mutationFn: handleRegister,
-    onSuccess(data, variables) {
-      console.log('### data', data.data);
-      console.log('### variables', variables);
-      // navigation.navigate('Login');
+    async onSuccess(data, variables) {
+      setAccessToken({
+        accessToken: data.data.access_token,
+        expiresAt: convertExpiresInToExpiresAt(data.data.expires_in),
+      });
+      console.log('### access_token', variables.email + 'Signed up'); //TODO: Add Toast and remove this
+      navigation.navigate(SCREEN_CONSTANTS.HOME as never);
     },
     onError(error) {
-      console.log('### error', error);
+      console.log('### error', error); //TODO: Add Toast and remove this
     },
   });
 
@@ -117,7 +123,7 @@ function SignUp(): React.JSX.Element {
       </Button>
       <Button
         style={styles.loginRegisterSection}
-        onPress={() => navigation.navigate('Login')}>
+        onPress={() => navigation.navigate(SCREEN_CONSTANTS.LOGIN as never)}>
         Already have an account? Login
       </Button>
     </LoginRegisterContainer>

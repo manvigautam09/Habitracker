@@ -9,6 +9,7 @@ import {
   emailValidationRules,
   passwordValidationRules,
 } from '../../utils/validation-rules';
+import {SCREEN_CONSTANTS} from '../../utils/constant';
 import CustomTextInput from '../../components/CustomTextInput';
 import LoginRegisterContainer from '../../components/LoginRegisterContainer';
 
@@ -91,7 +92,7 @@ function Login(): React.JSX.Element {
       </Button>
       <Button
         style={styles.loginRegisterSection}
-        onPress={() => navigation.navigate('SignUp')}>
+        onPress={() => navigation.navigate(SCREEN_CONSTANTS.SIGN_UP as never)}>
         Yet to Register? SignUp
       </Button>
     </LoginRegisterContainer>
