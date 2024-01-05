@@ -18,6 +18,7 @@ import SignUp from './screens/SignUp';
 import {fonts} from './utils/font-config';
 import {SCREEN_CONSTANTS} from './utils/constant';
 import {generatedDarkScheme} from './utils/color-scheme';
+import {useAccessTokenStore, useGetAccessToken} from './hooks/access-token';
 
 const {DarkTheme} = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -39,17 +40,33 @@ const theme = {
 function App(): React.JSX.Element {
   const Stack = createNativeStackNavigator();
 
+  const {accessToken, isLoading} = useGetAccessToken();
+  if (isLoading) {
+    useAccessTokenStore.getState().fetch();
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <PaperProvider theme={theme}>
         <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName={SCREEN_CONSTANTS.LOGIN}
-            screenOptions={{headerShown: false}}>
-            <Stack.Screen name={SCREEN_CONSTANTS.LOGIN} component={Login} />
-            <Stack.Screen name={SCREEN_CONSTANTS.SIGN_UP} component={SignUp} />
-            <Stack.Screen name={SCREEN_CONSTANTS.HOME} component={Home} />
-          </Stack.Navigator>
+          {!isLoading && accessToken ? (
+            <Stack.Navigator
+              initialRouteName={SCREEN_CONSTANTS.HOME}
+              screenOptions={{headerShown: false}}>
+              <Stack.Screen name={SCREEN_CONSTANTS.HOME} component={Home} />
+            </Stack.Navigator>
+          ) : (
+            <Stack.Navigator
+              initialRouteName={SCREEN_CONSTANTS.LOGIN}
+              screenOptions={{headerShown: false}}>
+              <Stack.Screen name={SCREEN_CONSTANTS.LOGIN} component={Login} />
+              <Stack.Screen
+                name={SCREEN_CONSTANTS.SIGN_UP}
+                component={SignUp}
+              />
+              <Stack.Screen name={SCREEN_CONSTANTS.HOME} component={Home} />
+            </Stack.Navigator>
+          )}
         </NavigationContainer>
       </PaperProvider>
     </QueryClientProvider>

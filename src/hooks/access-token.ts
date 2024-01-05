@@ -17,7 +17,11 @@ type AccessTokenStore = {
 export const useAccessTokenStore = create<AccessTokenStore>(set => ({
   accessToken: null,
   isLoading: true,
-  fetch: async () => {},
+  fetch: async () => {
+    const token = await AsyncStorage.getItem('accessToken');
+    set({accessToken: token, isLoading: false});
+  },
+
   set: token => set({accessToken: token}),
   remove: () => set({accessToken: null}),
 }));
