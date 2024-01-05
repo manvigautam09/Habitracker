@@ -39,8 +39,8 @@ const theme = {
 
 function App(): React.JSX.Element {
   const Stack = createNativeStackNavigator();
-
   const {accessToken, isLoading} = useGetAccessToken();
+
   if (isLoading) {
     useAccessTokenStore.getState().fetch();
   }
@@ -55,7 +55,8 @@ function App(): React.JSX.Element {
               screenOptions={{headerShown: false}}>
               <Stack.Screen name={SCREEN_CONSTANTS.HOME} component={Home} />
             </Stack.Navigator>
-          ) : (
+          ) : null}
+          {!isLoading && !accessToken ? (
             <Stack.Navigator
               initialRouteName={SCREEN_CONSTANTS.LOGIN}
               screenOptions={{headerShown: false}}>
@@ -66,7 +67,7 @@ function App(): React.JSX.Element {
               />
               <Stack.Screen name={SCREEN_CONSTANTS.HOME} component={Home} />
             </Stack.Navigator>
-          )}
+          ) : null}
         </NavigationContainer>
       </PaperProvider>
     </QueryClientProvider>
