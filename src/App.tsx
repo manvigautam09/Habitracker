@@ -56,6 +56,7 @@ function App(): React.JSX.Element {
               <Stack.Screen name={SCREEN_CONSTANTS.HOME} component={Home} />
             </Stack.Navigator>
           ) : null}
+
           {!isLoading && !accessToken ? (
             <Stack.Navigator
               initialRouteName={SCREEN_CONSTANTS.LOGIN}
