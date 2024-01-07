@@ -9,6 +9,7 @@ import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -70,6 +71,7 @@ function App(): React.JSX.Element {
             </Stack.Navigator>
           ) : null}
         </NavigationContainer>
+        <Toast />
       </PaperProvider>
     </QueryClientProvider>
   );
