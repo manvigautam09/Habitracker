@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
+import Toast from 'react-native-toast-message';
 import {useMutation} from '@tanstack/react-query';
 import {useForm, Controller} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
@@ -27,6 +28,18 @@ function SignUp(): React.JSX.Element {
     formState: {errors},
   } = useForm();
 
+  const showToast = (
+    type: 'success' | 'error',
+    title: string,
+    message: string,
+  ) => {
+    Toast.show({
+      type,
+      text1: title,
+      text2: message,
+    });
+  };
+
   const {mutate: register, isPending} = useMutation({
     mutationFn: handleRegister,
     async onSuccess(data, variables) {
@@ -34,11 +47,15 @@ function SignUp(): React.JSX.Element {
         accessToken: data.data.access_token,
         expiresAt: convertExpiresInToExpiresAt(data.data.expires_in),
       });
-      console.log('### access_token', variables.email + 'Signed up'); //TODO: Add Toast and remove this
+      showToast(
+        'success',
+        'Registered',
+        variables.email + 'is success registered',
+      );
       navigation.navigate(SCREEN_CONSTANTS.HOME as never);
     },
     onError(error) {
-      console.log('### error', error); //TODO: Add Toast and remove this
+      showToast('success', 'Could not register', error.message);
     },
   });
 
