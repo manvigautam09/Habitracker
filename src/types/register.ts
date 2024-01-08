@@ -6,6 +6,6 @@ export type SignUpInputs = {
 };
 
 export type LoginTypeInputs = {
-  email: string;
+  username: string;
   password: string;
 };

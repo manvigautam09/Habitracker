@@ -6,10 +6,11 @@ import {useMutation} from '@tanstack/react-query';
 import {useNavigation} from '@react-navigation/native';
 
 import {
-  emailValidationRules,
   passwordValidationRules,
+  usernameValidationRules,
 } from '../../utils/validation-rules';
 import {handleLogin} from '../../services/auth';
+import {useToast} from '../../hooks/show-toast';
 import {SCREEN_CONSTANTS} from '../../utils/constant';
 import {useGetAccessToken} from '../../hooks/access-token';
 import CustomTextInput from '../../components/CustomTextInput';
@@ -24,15 +25,24 @@ function Login(): React.JSX.Element {
     handleSubmit,
     formState: {errors},
   } = useForm();
+  const {showToast} = useToast();
   const {setAccessToken} = useGetAccessToken();
 
   const {mutate: loginMutation, isPending} = useMutation({
     mutationFn: handleLogin,
-    async onSuccess(data) {
+    async onSuccess(data, variables) {
       setAccessToken({
         accessToken: data.data.access_token,
         expiresAt: convertExpiresInToExpiresAt(data.data.expires_in),
       });
+      showToast(
+        'success',
+        'Registered',
+        variables.username + 'is success registered',
+      );
+    },
+    onError(error) {
+      showToast('error', 'Could not Login', error.message);
     },
   });
 
@@ -43,17 +53,17 @@ function Login(): React.JSX.Element {
       <View style={styles.inputView}>
         <Controller
           control={control}
-          rules={emailValidationRules}
+          rules={usernameValidationRules}
           render={({field}) => (
             <CustomTextInput
               value={field.value}
               onChangeText={field.onChange}
-              label="Enter Email"
+              label="Enter Username"
               error={!!errors.email?.message}
               errorMsg={errors.email?.message?.toString() ?? ''}
             />
           )}
-          name="email"
+          name="username"
         />
       </View>
       <View style={styles.inputView}>
