@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
-import Toast from 'react-native-toast-message';
 import {useMutation} from '@tanstack/react-query';
 import {useForm, Controller} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
@@ -12,6 +11,7 @@ import {
   passwordValidationRules,
   usernameValidationRules,
 } from '../../utils/validation-rules';
+import {useToast} from '../../hooks/show-toast';
 import {handleRegister} from '../../services/auth';
 import {SCREEN_CONSTANTS} from '../../utils/constant';
 import {useGetAccessToken} from '../../hooks/access-token';
@@ -28,17 +28,7 @@ function SignUp(): React.JSX.Element {
     formState: {errors},
   } = useForm();
 
-  const showToast = (
-    type: 'success' | 'error',
-    title: string,
-    message: string,
-  ) => {
-    Toast.show({
-      type,
-      text1: title,
-      text2: message,
-    });
-  };
+  const {showToast} = useToast();
 
   const {mutate: register, isPending} = useMutation({
     mutationFn: handleRegister,
