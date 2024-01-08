@@ -45,7 +45,7 @@ function SignUp(): React.JSX.Element {
       navigation.navigate(SCREEN_CONSTANTS.HOME as never);
     },
     onError(error) {
-      showToast('success', 'Could not register', error.message);
+      showToast('error', 'Could not register', error.message);
     },
   });
 
