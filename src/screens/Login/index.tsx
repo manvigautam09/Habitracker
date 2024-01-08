@@ -9,8 +9,11 @@ import {
   emailValidationRules,
   passwordValidationRules,
 } from '../../utils/validation-rules';
+import {handleLogin} from '../../services/auth';
 import {SCREEN_CONSTANTS} from '../../utils/constant';
+import {useGetAccessToken} from '../../hooks/access-token';
 import CustomTextInput from '../../components/CustomTextInput';
+import {convertExpiresInToExpiresAt} from '../../utils/helpers';
 import LoginRegisterContainer from '../../components/LoginRegisterContainer';
 
 function Login(): React.JSX.Element {
@@ -21,32 +24,19 @@ function Login(): React.JSX.Element {
     handleSubmit,
     formState: {errors},
   } = useForm();
+  const {setAccessToken} = useGetAccessToken();
 
-  const loginUser = async (data: any) => {
-    // Perform your registration logic here
-    // For example, make an API call to register the user
-    const response = await fetch('/api/register', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+  const {mutate: loginMutation, isPending} = useMutation({
+    mutationFn: handleLogin,
+    async onSuccess(data) {
+      setAccessToken({
+        accessToken: data.data.access_token,
+        expiresAt: convertExpiresInToExpiresAt(data.data.expires_in),
+      });
+    },
+  });
 
-    if (!response.ok) {
-      throw new Error('Registration failed');
-    }
-
-    // Return the registered user data
-    return response.json();
-  };
-
-  const loginMutation = useMutation(loginUser);
-
-  const onSubmit = (data: any) => {
-    console.log('### data', data);
-    loginMutation.mutate(data);
-  };
+  const onSubmit = (data: any) => loginMutation(data);
 
   return (
     <LoginRegisterContainer title="Habitracker Login">
@@ -86,9 +76,11 @@ function Login(): React.JSX.Element {
 
       <Button
         mode="contained"
+        disabled={isPending}
+        loading={isPending}
         style={styles.loginButtonStyle}
         onPress={handleSubmit(onSubmit)}>
-        Login
+        {isPending ? 'Signing In...' : 'Login'}
       </Button>
       <Button
         style={styles.loginRegisterSection}

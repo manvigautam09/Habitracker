@@ -29,7 +29,6 @@ function SignUp(): React.JSX.Element {
   } = useForm();
 
   const {showToast} = useToast();
-
   const {mutate: register, isPending} = useMutation({
     mutationFn: handleRegister,
     async onSuccess(data, variables) {
@@ -49,9 +48,7 @@ function SignUp(): React.JSX.Element {
     },
   });
 
-  const onSubmit = (data: any) => {
-    register(data);
-  };
+  const onSubmit = (data: any) => register(data);
 
   return (
     <LoginRegisterContainer title="Habitracker SignUp">
@@ -126,7 +123,7 @@ function SignUp(): React.JSX.Element {
         disabled={isPending}
         loading={isPending}
         onPress={handleSubmit(onSubmit)}>
-        {isPending ? 'Signing up...' : 'Register'}
+        {isPending ? 'Signing Up...' : 'Register'}
       </Button>
       <Button
         style={styles.loginRegisterSection}
