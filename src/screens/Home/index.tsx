@@ -1,5 +1,5 @@
-import {useQuery} from '@tanstack/react-query';
 import React from 'react';
+import {useQuery} from '@tanstack/react-query';
 import {View, SafeAreaView, StyleSheet, Text, FlatList} from 'react-native';
 
 function Home(): React.JSX.Element {
